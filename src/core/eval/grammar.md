@@ -22,6 +22,8 @@ SUM(A3:B3, 1, 2 "ser", AVG(3, 5, A3:A4))
 
 **range**: `cellLiteral` `:` `cellLiteral`
 
-**term**: `identifier` | `cellLiteral` | `numberLiteral` | `stringLiteral` | `range` | `-term`
+**term**: `cellLiteral` | `numberLiteral` | `stringLiteral` | `range` | `-term`
 
-**expression**: `identifier` | `identifier` ( `identifier` (`, identifier`)* )
+**expression**: `term` | `identifier` ( `expression` (`, expression`)* )
+
+**formula**: `expression`
