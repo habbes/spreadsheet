@@ -1,4 +1,4 @@
-import { Parser } from '../parser';
+import { Parser, parseSource } from '../parser';
 import { number, string, cell, symbol, identifier } from '../token';
 import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode } from '../parse-tree';
 
@@ -178,5 +178,52 @@ describe('Parser', () => {
             expect(parser.parseFunctionCall).not.toHaveBeenCalled();
             expect(parser.parseTerm).toHaveBeenCalled();
         });
+    });
+});
+
+describe('parseSource', () => {
+    const parser = new Parser();
+
+    function testParseSource(source, expected) {
+        const tree = parseSource(source, parser);
+        expect(tree).toEqual(expected);
+    }
+
+    function testParseSourceError(source, expectedError) {
+        expect(() => parseSource(source, parser)).toThrow(expectedError);
+    }
+
+    it('should transform expression source code into parse tree', () => {
+        testParseSource(
+            'A3',
+            new CellNode('A3')
+        );
+        
+        testParseSource(
+            '25.3',
+            new NumberNode('25.3')
+        );
+
+        testParseSource(
+            '"test"',
+            new StringNode('"test"')
+        );
+
+        testParseSource(
+            'SUM(A3:A10, 30, "two", AVG(A5, B4))',
+            new FunctionCallNode('SUM', [
+                new CellRangeNode('A3', 'A10'),
+                new NumberNode('30'),
+                new StringNode('"two"'),
+                new FunctionCallNode('AVG', [
+                    new CellNode('A5'), new CellNode('B4')
+                ])
+            ])
+        );
+    });
+
+    it('should throw error on invalid error', () => {
+        testParseSourceError('SUM([', /invalid syntax near \[/i);
+        testParseSourceError('SUM(A3,', /unexpected end of input/i);
     });
 });

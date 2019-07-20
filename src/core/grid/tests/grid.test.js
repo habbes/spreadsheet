@@ -21,6 +21,31 @@ describe('Grid', () => {
                 expect(cell.input).toBeUndefined();
             });
         });
+        describe('when setting a cell that already has an input', () => {
+            it('should overwrite existing input with new input', () => {
+                grid.setCellInput(10, 11, 'test');
+                grid.setCellInput(10, 11, 'test2');
+                expect(grid.getCellAt(10, 11).input).toBe('test2');
+            });
+        });
+        describe('when setting a cell input to null, undefined or empty string', () => {
+            it('should remove the cell', () => {
+                grid.setCellInput(10, 11, 'test');
+                grid.setCellInput(10, 11, '');
+                expect(grid.getCellAt(10, 11).input).toBeUndefined();
+                expect('10,11' in grid.matrix).toBe(false);
+
+                grid.setCellInput(10, 11, 'test');
+                grid.setCellInput(10, 11, null);
+                expect(grid.getCellAt(10, 11).input).toBeUndefined();
+                expect('10,11' in grid.matrix).toBe(false);
+
+                grid.setCellInput(10, 11, 'test');
+                grid.setCellInput(10, 11, undefined);
+                expect(grid.getCellAt(10, 11).input).toBeUndefined();
+                expect('10,11' in grid.matrix).toBe(false);
+            });
+        });
 
         describe('getCells', () => {
             it('should return all the cells from the specified coordinates', () => {
@@ -74,6 +99,16 @@ describe('Grid', () => {
                 expect(grid.getCoordsInRange).toHaveBeenCalledWith(1, 2, 3, 4);
                 expect(grid.getCells).toHaveBeenCalledWith([[1, 2], [3, 4]]);
                 expect(res).toEqual(cells);
+            });
+        });
+
+        describe('getCoordsWithInputs', () => {
+            it('should return the coords of all the cells with inputs', () => {
+                grid.setCellInput(0, 10, 'test');
+                grid.setCellInput(10, 11, '20');
+                grid.setCellInput(2, 10, '=sum(1, 2)');
+                const coords = grid.getCoordsWithInputs();
+                expect(coords).toEqual([[0, 10], [10, 11], [2, 10]]);
             });
         });
     });

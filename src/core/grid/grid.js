@@ -10,7 +10,12 @@ export class Grid {
     }
 
     setCellInput(x, y, input) {
-        this.matrix[this._getKey(x, y)] = input;
+        const key = this._getKey(x, y);
+        if (input === '' || input === undefined || input === null) {
+            delete this.matrix[key];
+            return;
+        }
+        this.matrix[key] = input;
     }
 
     getCellAt(x, y) {
@@ -35,6 +40,12 @@ export class Grid {
     getCellsInRange(x1, y1, x2, y2) {
         return this.getCells(
             this.getCoordsInRange(x1, y1, x2, y2)
+        )
+    }
+
+    getCoordsWithInputs() {
+        return Object.keys(this.matrix).map(
+            key => key.split(',').map(c => Number(c))
         )
     }
 }

@@ -1,7 +1,7 @@
 export class Cell {
-    constructor (input) {
+    constructor (input, value, error) {
         this.input = input;
-        this.error = undefined;
-        this.value = undefined;
+        this.error = value;
+        this.value = error;
     }
 }

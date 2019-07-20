@@ -1,6 +1,7 @@
 import { Token } from './token';
 import * as types from './token-types';
-import { CellRangeNode, FunctionCallNode, NumberNode, StringNode, CellNode } from './parse-tree';
+import { CellRangeNode, FunctionCallNode, NumberNode, StringNode, CellNode, ParseTree } from './parse-tree';
+import { lex } from './lexer';
 
 export class Parser {
     /**
@@ -95,4 +96,16 @@ export class Parser {
         }
         return this.parseTerm();
     }
+}
+
+/**
+ * 
+ * @param {string} source formula source code
+ * @param {Parser} parser
+ * @return {ParseTree}
+ */
+export function parseSource(source, parser) {
+    const tokens = lex(source);
+    parser.init(tokens);
+    return parser.parseExpression();
 }
