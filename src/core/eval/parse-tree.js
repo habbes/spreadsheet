@@ -19,7 +19,7 @@ export class StringTree extends ParseTree {
 
 export class CellRangeNode extends ParseTree {
     constructor (startCell, endCell) {
-        super(null, [startCell, endCell])
+        super([startCell, endCell])
     }
 }
 

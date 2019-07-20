@@ -7,7 +7,7 @@ export class Parser {
      * 
      * @param {Token[]} tokens
      */
-    initParse (tokens) {
+    init (tokens) {
         this.tokens = tokens;
     }
 
@@ -27,7 +27,7 @@ export class Parser {
         return this.tokens.length >= 2 && this.tokens[1].type === expectedType;
     }
 
-    consumeToken () {
+    consumeNext () {
         if (!this.tokens.length) {
             throw new Error('Unexpected end of input');
         }
@@ -35,7 +35,7 @@ export class Parser {
     }
 
     consumeValue (...expectedValues) {
-        const token = this.consumeToken();
+        const token = this.consumeNext();
         if (!expectedValues.includes(token.value)) {
             throw new Error(`Expected ${expectedValues.join(' or ')} but found '${token.value}'`);
         }
@@ -43,7 +43,7 @@ export class Parser {
     }
 
     consumeType (expectedType) {
-        const token = this.consumeToken();
+        const token = this.consumeNext();
         if (token.type !== expectedType) {
             throw new Error(`Expected a ${expectedType} but found '${token.value}'`);
         }
@@ -51,9 +51,9 @@ export class Parser {
     }
 
     parseTerm() {
-        const token = this.consumeToken();
+        const token = this.consumeNext();
         const literalTypes = [types.NUMBER_LITERAL, types.STRING_LITERAL, types.CELL_LITERAL];
-        if (token.type === types.CELL_LITERAL && this.isValueAfterNext(':')) {
+        if (token.type === types.CELL_LITERAL && this.isNextValue(':')) {
             this.consumeValue(':');
             const token2 = this.consumeType(types.CELL_LITERAL);
             return new CellRangeNode(token.value, token2.value);
@@ -62,7 +62,7 @@ export class Parser {
         if (literalTypes.includes(token.type)) {
             return new ValueNode(token.value, token.type);
         }
-        throw new Error(`Unexpected token ${token.value}`);
+        throw new Error(`Unexpected ${token.type} '${token.value}'`);
     }
 
     parseFunctionCall() {
