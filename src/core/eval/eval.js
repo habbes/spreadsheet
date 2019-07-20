@@ -2,9 +2,9 @@ import { Grid } from '../grid';
 import { Cell } from '../cell';
 import { parseSource } from './parser';
 
-export function evaluateGrid (inputGrid, parser) {
-    const context = new EvalContext(inputGrid, new Grid(), parser);
-    const coords = inputGrid.getCoordsWithInputs();
+export function evaluateGrid (inputGrid, functions, parser) {
+    const context = new EvalContext(inputGrid, new Grid(), functions, parser);
+    const coords = inputGrid.getCoordsWithValues();
     coords.forEach((coord) => {
         const cell = evaluateCellAt(coord, context);
         if (cell) {
@@ -43,16 +43,18 @@ export function evaluateCellAt(coord, context) {
     }
 }
 
-class EvalContext {
+export class EvalContext {
     /**
      * 
      * @param {Grid} inputGrid
      * @param {Grid} outputGrid 
+     * @param {object} functions
      * @param {Parser} parser 
      */
-    constructor (inputGrid, outputGrid, parser) {
+    constructor (inputGrid, outputGrid, functions, parser) {
         this.inputGrid = inputGrid;
         this.outputGrid = outputGrid;
+        this.functions = functions;
         this.parser = parser;
     }
 }

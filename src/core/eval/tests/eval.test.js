@@ -1,4 +1,4 @@
-import { evaluateCellAt, evaluateFormula } from '../eval';
+import { evaluateCellAt, evaluateFormula, evaluateGrid, EvalContext } from '../eval';
 import * as parser from '../parser';
 import { Grid } from '../../grid';
 import { Cell } from '../../cell';
@@ -60,6 +60,41 @@ describe('eval', () => {
             const input = '=SUM(10';
             jest.spyOn(parser, 'parseSource').mockImplementation(() => { throw new Error('syntax error'); });
             testEvaluateCell(input, new Cell(input, undefined, 'syntax error'));
+        });
+
+        describe('if the cell already exists in the output grid', () => {
+            it('should return value from output grid without re-evaluating', () => {
+                const cell = new Cell('=SUM(A3, A4)', 20);
+                context.outputGrid.setAt(coord, cell);
+                jest.spyOn(parser, 'parseSource')
+                testEvaluateCell('=SUM(A3, A4)', cell);
+                expect(parser.parseSource).not.toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe('evaluateGrid', () => {
+        it('should evaluate each input cell with values and set the evaluated cells in the output grid', () => {
+            const inputGrid = new Grid();
+            inputGrid.setAt([1, 2], '10');
+            inputGrid.setAt([2, 3], 'test');
+            inputGrid.setAt([3, 4], '=SUM(A3:A10)');
+            const functions = { sum: () => {} };
+
+            const tree = {
+                evaluate: jest.fn().mockReturnValue(24)
+            };
+            const parserInstance = {};
+            jest.spyOn(parser, 'parseSource').mockReturnValue(tree);
+
+            const outputGrid = evaluateGrid(inputGrid, functions, parserInstance);
+            expect(parser.parseSource).toHaveBeenCalledWith('SUM(A3:A10)', parserInstance);
+            expect(tree.evaluate).toHaveBeenCalledWith(new EvalContext(inputGrid, outputGrid, functions, parserInstance));
+
+            expect(outputGrid.getCoordsWithValues()).toEqual([[1, 2], [2, 3], [3, 4]]);
+            expect(outputGrid.getAt([1, 2])).toEqual(new Cell('10', 10));
+            expect(outputGrid.getAt([2, 3])).toEqual(new Cell('test', 'test'));
+            expect(outputGrid.getAt([3, 4])).toEqual(new Cell('=SUM(A3:A10)', 24));
         });
     });
 });
