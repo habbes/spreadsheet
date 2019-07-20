@@ -2,14 +2,16 @@ import { Grid } from '../grid';
 import { Cell } from '../cell';
 import { parseSource } from './parser';
 
-export function evaluateGrid (grid, parser) {
-    const context = new EvalContext(grid, parser, {});
-    const coords = grid.getCoordsWithInputs();
+export function evaluateGrid (inputGrid, parser) {
+    const context = new EvalContext(inputGrid, new Grid(), parser);
+    const coords = inputGrid.getCoordsWithInputs();
     coords.forEach((coord) => {
-        const key = grid._getKey(...coord);
-        this.cache[key] = evaluateCellAt(coord, context);
+        const cell = evaluateCellAt(coord, context);
+        if (cell) {
+            context.outputGrid.setAt(...coord, cell);
+        }
     });
-    return this.cache;
+    return context.outputGrid;
 }
 
 /**
@@ -29,11 +31,10 @@ export function evaluateFormula(source, context) {
  * @return {Cell}
  */
 export function evaluateCellAt([x, y], context) {
-    const key = context.grid._getKey(x, y);
-    if (key in context.cache) {
-        return context.cache[key];
+    if (context.outputGrid.getAt(x, y)) {
+        return context.outputGrid.getAt(x, y);
     }
-    const { input } = context.grid.getAt(x, y);
+    const input = context.inputGrid.getAt(x, y);
     if (input) {
         if (isNumber(input)) {
             return new Cell(input, Number(input))
@@ -53,20 +54,21 @@ export function evaluateCellAt([x, y], context) {
     }
 }
 
+class EvalContext {
+    /**
+     * 
+     * @param {Grid} inputGrid
+     * @param {Grid} outputGrid 
+     * @param {Parser} parser 
+     */
+    constructor (inputGrid, outputGrid, parser) {
+        this.inputGrid = inputGrid;
+        this.outputGrid = outputGrid;
+        this.parser = parser;
+    }
+}
+
 function isNumber(a) {
     return !isNaN(Number(a))
 }
 
-class EvalContext {
-    /**
-     * 
-     * @param {Grid} grid 
-     * @param {Parser} parser 
-     * @param {any} cache 
-     */
-    constructor (grid, parser, cache) {
-        this.grid = grid;
-        this.parser = parser;
-        this.cache = cache;
-    }
-}
