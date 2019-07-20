@@ -45,7 +45,7 @@ export class Parser {
     consumeType (expectedType) {
         const token = this.consumeNext();
         if (token.type !== expectedType) {
-            throw new Error(`Expected a ${expectedType} but found '${token.value}'`);
+            throw new Error(`Expected ${expectedType} but found ${token.type} '${token.value}'`);
         }
         return token;
     }
@@ -86,7 +86,7 @@ export class Parser {
             token = this.consumeValue(',', ')');
         }
         
-        return new FunctionCallNode(name, args);
+        return new FunctionCallNode(name.value, args);
     }
 
     parseExpression () {
