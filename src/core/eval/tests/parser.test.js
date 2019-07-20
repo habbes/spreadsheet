@@ -38,20 +38,6 @@ describe('Parser', () => {
         };
     }
 
-    describe('consumeNext', () => {
-        it('should consume next token and remove it from list', () => {
-            tokens = [number('1'), symbol(',')];
-            parser.init(tokens);
-            const token = parser.consumeNext();
-            expect(token).toEqual(number('1'));
-            expect(parser.tokens).toEqual([symbol(',')]);
-        });
-        it('should throw error if there no tokens left', () => {
-            parser.init([]);
-            expect(() => parser.consumeNext()).toThrow(/unexpected end of input/i);
-        })
-    });
-
     describe('parseTerm', () => {
         const { testParse, testError } = createParseTestersFor(() => parser.parseTerm());
     
@@ -172,6 +158,7 @@ describe('Parser', () => {
         it('should throw error on unexpected tokens', () => {
             testError([symbol(',')], /unexpected symbol ','/i);
             testError([identifier('func')], /unexpected end of input/i);
+            testError([], /unexpected end of input/i);
         });
         it('calls parseFunctionCall if next token is an identifier', () => {
             jest.spyOn(parser, 'parseFunctionCall').mockReturnValue(new FunctionCallNode('test', []));
