@@ -8,33 +8,22 @@ export function evaluateGrid (inputGrid, parser) {
     coords.forEach((coord) => {
         const cell = evaluateCellAt(coord, context);
         if (cell) {
-            context.outputGrid.setAt(...coord, cell);
+            context.outputGrid.setAt(coord, cell);
         }
     });
     return context.outputGrid;
 }
 
-/**
- * 
- * @param {string} source 
- * @param {EvalContext} context 
- */
 export function evaluateFormula(source, context) {
     const tree = parseSource(source, context.parser);
     return tree.evaluate(context);
 }
 
-/**
- * 
- * @param {number[]} coords
- * @param {EvalContext} context
- * @return {Cell}
- */
-export function evaluateCellAt([x, y], context) {
-    if (context.outputGrid.getAt(x, y)) {
-        return context.outputGrid.getAt(x, y);
+export function evaluateCellAt(coord, context) {
+    if (context.outputGrid.getAt(coord)) {
+        return context.outputGrid.getAt(coord);
     }
-    const input = context.inputGrid.getAt(x, y);
+    const input = context.inputGrid.getAt(coord);
     if (input) {
         if (isNumber(input)) {
             return new Cell(input, Number(input))

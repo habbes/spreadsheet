@@ -7,7 +7,6 @@ describe('Parser', () => {
      * @type Parser
      */
     let parser;
-    let tokens;
     beforeEach(() => {
         parser = new Parser();
     });
