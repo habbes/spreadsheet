@@ -1,7 +1,7 @@
 import { Parser } from '../parser';
 import { Token } from '../token';
 import { NUMBER_LITERAL, SYMBOL, STRING_LITERAL, CELL_LITERAL, IDENTIFIER } from '../token-types';
-import { ValueNode, CellRangeNode } from '../parse-tree';
+import { CellRangeNode, StringNode, NumberNode, CellNode } from '../parse-tree';
 
 function symbol (value) {
     return new Token(value, SYMBOL);
@@ -43,19 +43,19 @@ describe('Parser', () => {
         it('should parse string literal', () => {
             parser.init([new Token('"test"', STRING_LITERAL), symbol(',')]);
             const node = parser.parseTerm();
-            expect(node).toEqual(new ValueNode('"test"', STRING_LITERAL));
+            expect(node).toEqual(new StringNode('"test"'));
             expect(parser.tokens).toEqual([symbol(',')]);
         });
         it('should parse number literal', () => {
             parser.init([new Token('20.43', NUMBER_LITERAL), symbol(',')]);
             const node = parser.parseTerm();
-            expect(node).toEqual(new ValueNode('20.43', NUMBER_LITERAL));
+            expect(node).toEqual(new NumberNode('20.43'));
             expect(parser.tokens).toEqual([symbol(',')]);
         });
         it('should parse cell literal', () => {
             parser.init([new Token('A3', CELL_LITERAL), symbol(',')]);
             const node = parser.parseTerm();
-            expect(node).toEqual(new ValueNode('A3', CELL_LITERAL));
+            expect(node).toEqual(new CellNode('A3'));
             expect(parser.tokens).toEqual([symbol(',')]);
         });
         it('should parse cell range', () => {

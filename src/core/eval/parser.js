@@ -1,6 +1,6 @@
 import { Token } from './token';
 import * as types from './token-types';
-import { ValueNode, CellRangeNode, FunctionCallNode } from './parse-tree';
+import { CellRangeNode, FunctionCallNode, NumberNode, StringNode, CellNode } from './parse-tree';
 
 export class Parser {
     /**
@@ -52,17 +52,22 @@ export class Parser {
 
     parseTerm() {
         const token = this.consumeNext();
-        const literalTypes = [types.NUMBER_LITERAL, types.STRING_LITERAL, types.CELL_LITERAL];
         if (token.type === types.CELL_LITERAL && this.isNextValue(':')) {
             this.consumeValue(':');
             const token2 = this.consumeType(types.CELL_LITERAL);
             return new CellRangeNode(token.value, token2.value);
         }
 
-        if (literalTypes.includes(token.type)) {
-            return new ValueNode(token.value, token.type);
+        switch (token.type) {
+            case types.NUMBER_LITERAL:
+                return new NumberNode(token.value);
+            case types.STRING_LITERAL:
+                return new StringNode(token.value);
+            case types.CELL_LITERAL:
+                return new CellNode(token.value);
+            default:
+                throw new Error(`Unexpected ${token.type} '${token.value}'`);
         }
-        throw new Error(`Unexpected ${token.type} '${token.value}'`);
     }
 
     parseFunctionCall() {
