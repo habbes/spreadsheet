@@ -40,6 +40,15 @@ describe('Parser', () => {
         }
     }
 
+    function createParserTesterFor(parseFn) {
+        return (initTokens, expectedNode, expectedTokensAfter) => {
+            parser.init(initTokens);
+            const node = parseFn();
+            expect(node).toEqual(expectedNode);
+            expect(parser.tokens).toEqual(expectedTokensAfter);
+        }
+    }
+
     describe('consumeNext', () => {
         it('should consume next token and remove it from list', () => {
             tokens = [new Token('1', NUMBER_LITERAL), symbol(',')];
@@ -142,7 +151,7 @@ describe('Parser', () => {
             ]));
             expect(parser.tokens).toEqual([]);
         });
-        it('should throw errors on expected tokens', () => {
+        it('should throw errors on unexpected syntax', () => {
             testError([], /unexpected end of input/i);
             testError([identifier('sum')], /unexpected end of input/i);
             testError([identifier('sum'), symbol('(')], /unexpected end of input/i);
@@ -153,6 +162,47 @@ describe('Parser', () => {
             testError([identifier('sum'), symbol('('), number('24'), symbol('-')], /expected , or \) but found '-'/i);
             testError([cell('a3')], /expected identifier but found cellLiteral 'a3'/i);
             testError([identifier('sum'), symbol('('), identifier('func2'), symbol(')')], /expected \( but found '\)'/i);
+        });
+    });
+
+    describe('parseExpression', () => {
+        const testError = createErrorTesterFor(() => parser.parseExpression());
+        const testParse = createParserTesterFor(() => parser.parseExpression());
+
+        it('should parse function call', () => {
+            testParse(
+                [identifier('func'), symbol('('), cell('B4'), symbol(':'), cell('B10'), symbol(')')],
+                new FunctionCallNode('func', [new CellRangeNode('B4', 'B10')]),
+                []
+            );
+        });
+        it('should parse term', () => {
+            testParse([cell('A3')], new CellNode('A3'), []);
+            testParse([cell('A3'), symbol(':'), cell('C3')], new CellRangeNode('A3', 'C3'), []);
+            testParse([number('3')], new NumberNode('3'), []);
+            testParse([string('"a"')], new StringNode('"a"'), []);
+        });
+        it('should throw error on unexpected tokens', () => {
+            testError([symbol(',')], /unexpected symbol ','/i);
+            testError([identifier('func')], /unexpected end of input/i);
+        });
+        it('calls parseFunctionCall if next token is an identifier', () => {
+            jest.spyOn(parser, 'parseFunctionCall').mockReturnValue(new FunctionCallNode('test', []));
+            jest.spyOn(parser, 'parseTerm');
+            parser.init([identifier('test')]);
+            const node = parser.parseExpression();
+            expect(node).toEqual(new FunctionCallNode('test', []));
+            expect(parser.parseFunctionCall).toHaveBeenCalled();
+            expect(parser.parseTerm).not.toHaveBeenCalled();
+        });
+        it('calls parseTerm if next token is NOT an identifier', () => {
+            jest.spyOn(parser, 'parseFunctionCall');
+            jest.spyOn(parser, 'parseTerm').mockReturnValue(new CellNode('A3'));
+            parser.init([symbol(',')]);
+            const node = parser.parseExpression();
+            expect(node).toEqual(new CellNode('A3'));
+            expect(parser.parseFunctionCall).not.toHaveBeenCalled();
+            expect(parser.parseTerm).toHaveBeenCalled();
         });
     });
 });
