@@ -1,5 +1,3 @@
-import { Cell } from '../cell';
-
 export class Grid {
     constructor () {
         this.matrix = {};
@@ -9,18 +7,17 @@ export class Grid {
         return `${x},${y}`;
     }
 
-    setCellInput(x, y, input) {
+    setAt(x, y, value) {
         const key = this._getKey(x, y);
-        if (input === '' || input === undefined || input === null) {
+        if (value === '' || value === undefined || value === null) {
             delete this.matrix[key];
             return;
         }
-        this.matrix[key] = input;
+        this.matrix[key] = value;
     }
 
-    getCellAt(x, y) {
-        const input = this.matrix[this._getKey(x, y)];
-        return new Cell(input);
+    getAt(x, y) {
+        return this.matrix[this._getKey(x, y)];
     }
 
     getCoordsInRange(x1, y1, x2, y2) {
@@ -33,17 +30,17 @@ export class Grid {
         return coords;
     }
 
-    getCells(coords) {
-        return coords.map(([x, y]) => this.getCellAt(x, y));
+    getValues(coords) {
+        return coords.map(([x, y]) => this.getAt(x, y));
     }
 
-    getCellsInRange(x1, y1, x2, y2) {
-        return this.getCells(
+    getValuesInRange(x1, y1, x2, y2) {
+        return this.getValues(
             this.getCoordsInRange(x1, y1, x2, y2)
         )
     }
 
-    getCoordsWithInputs() {
+    getCoordsWithValues() {
         return Object.keys(this.matrix).map(
             key => key.split(',').map(c => Number(c))
         )

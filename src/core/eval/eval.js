@@ -2,6 +2,16 @@ import { Grid } from '../grid';
 import { Cell } from '../cell';
 import { parseSource } from './parser';
 
+export function evaluateGrid (grid, parser) {
+    const context = new EvalContext(grid, parser, {});
+    const coords = grid.getCoordsWithInputs();
+    coords.forEach((coord) => {
+        const key = grid._getKey(...coord);
+        this.cache[key] = evaluateCellAt(coord, context);
+    });
+    return this.cache;
+}
+
 /**
  * 
  * @param {string} source 
@@ -23,7 +33,7 @@ export function evaluateCellAt([x, y], context) {
     if (key in context.cache) {
         return context.cache[key];
     }
-    const { input } = context.grid.getCellAt(x, y);
+    const { input } = context.grid.getAt(x, y);
     if (input) {
         if (isNumber(input)) {
             return new Cell(input, Number(input))
@@ -59,14 +69,4 @@ class EvalContext {
         this.parser = parser;
         this.cache = cache;
     }
-}
-
-export function evaluateGrid (grid, parser) {
-    const context = new EvalContext(grid, parser, {});
-    const coords = grid.getCoordsWithInputs();
-    coords.forEach((coord) => {
-        const key = grid._getKey(...coord);
-        this.cache[key] = evaluateCellAt(coord, context);
-    });
-    return this.cache;
 }
