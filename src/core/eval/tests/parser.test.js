@@ -65,7 +65,11 @@ describe('Parser', () => {
             testParse([cell('A3'), symbol(',')], new CellNode('A3'), [symbol(',')]);
         });
         it('should parse cell range', () => {
-            testParse([cell('A3'), symbol(':'), cell('B5'), symbol(',')], new CellRangeNode('A3', 'B5'), [symbol(',')]);
+            testParse(
+                [cell('A3'), symbol(':'), cell('B5'), symbol(',')],
+                new CellRangeNode('A3', 'B5'),
+                [symbol(',')]
+            );
         });
         it('should throw error when syntax errors found', () => {
             testError([symbol(',')], /unexpected symbol ','/i);
@@ -83,8 +87,11 @@ describe('Parser', () => {
             testParse([identifier('sum'), symbol('('), symbol(')')], new FunctionCallNode('sum', []), []);
         });
         it('should parse call with one arg', () => {
-            testParse([identifier('exp'), symbol('('), cell('A3'), symbol(')'), symbol(',')],
-            new FunctionCallNode('exp', [new CellNode('A3')]), [symbol(',')]);
+            testParse(
+                [identifier('exp'), symbol('('), cell('A3'), symbol(')'), symbol(',')],
+                new FunctionCallNode('exp', [new CellNode('A3')]),
+                [symbol(',')]
+            );
         });
         it('should parse call with multiple args', () => {
             testParse(
@@ -97,7 +104,10 @@ describe('Parser', () => {
                     symbol(')'), symbol(',')
                 ],
                 new FunctionCallNode('func', [
-                    new NumberNode('23.4'), new CellNode('B2'), new StringNode('"test"'), new CellRangeNode('C10', 'C15')
+                    new NumberNode('23.4'),
+                    new CellNode('B2'),
+                    new StringNode('"test"'),
+                    new CellRangeNode('C10', 'C15')
                 ]),
                 [symbol(',')]
             );
