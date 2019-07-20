@@ -1,27 +1,8 @@
 import { Parser } from '../parser';
-import { Token } from '../token';
-import { NUMBER_LITERAL, SYMBOL, STRING_LITERAL, CELL_LITERAL, IDENTIFIER } from '../token-types';
+import { number, string, cell, symbol, identifier } from '../token';
 import { CellRangeNode, StringNode, NumberNode, CellNode, FunctionCallNode } from '../parse-tree';
 
-function symbol (value) {
-    return new Token(value, SYMBOL);
-}
 
-function identifier (value) {
-    return new Token(value, IDENTIFIER);
-}
-
-function cell (value) {
-    return new Token(value, CELL_LITERAL);
-}
-
-function string (value) {
-    return new Token(value, STRING_LITERAL);
-}
-
-function number (value) {
-    return new Token(value, NUMBER_LITERAL);
-}
 
 describe('Parser', () => {
     /**
@@ -33,29 +14,39 @@ describe('Parser', () => {
         parser = new Parser();
     });
 
-    function createErrorTesterFor(parseFn) {
-        return (tokens, messageRe) => {
-            parser.init(tokens);
-            expect(parseFn).toThrow(messageRe);
-        }
-    }
+    function createParseTestersFor(parseFn) {
+        return {
+            /**
+             * tests whether the parser function returns the
+             * expected node given the specified tokens
+             * and whether the expected tokens remains
+             */
+            testParse (initTokens, expectedNode, expectedTokensAfter) {
+                parser.init(initTokens);
+                const node = parseFn();
+                expect(node).toEqual(expectedNode);
+                expect(parser.tokens).toEqual(expectedTokensAfter);
+            },
 
-    function createParserTesterFor(parseFn) {
-        return (initTokens, expectedNode, expectedTokensAfter) => {
-            parser.init(initTokens);
-            const node = parseFn();
-            expect(node).toEqual(expectedNode);
-            expect(parser.tokens).toEqual(expectedTokensAfter);
-        }
+            /**
+             * tests whether the specified parser function
+             * throws the specified error given the specified
+             * input tokens
+             */
+            testError (tokens, messageRe) {
+                parser.init(tokens);
+                expect(parseFn).toThrow(messageRe);
+            }
+        };
     }
 
     describe('consumeNext', () => {
         it('should consume next token and remove it from list', () => {
-            tokens = [new Token('1', NUMBER_LITERAL), symbol(',')];
+            tokens = [number('1'), symbol(',')];
             parser.init(tokens);
             const token = parser.consumeNext();
-            expect(token).toEqual(new Token('1', NUMBER_LITERAL));
-            expect(parser.tokens).toEqual([new Token(',', SYMBOL)]);
+            expect(token).toEqual(number('1'));
+            expect(parser.tokens).toEqual([symbol(',')]);
         });
         it('should throw error if there no tokens left', () => {
             parser.init([]);
@@ -64,42 +55,31 @@ describe('Parser', () => {
     });
 
     describe('parseTerm', () => {
-        const testError = createErrorTesterFor(() => parser.parseTerm());
+        const { testParse, testError } = createParseTestersFor(() => parser.parseTerm());
+    
         it('should parse string literal', () => {
-            parser.init([new Token('"test"', STRING_LITERAL), symbol(',')]);
-            const node = parser.parseTerm();
-            expect(node).toEqual(new StringNode('"test"'));
-            expect(parser.tokens).toEqual([symbol(',')]);
+            testParse([string('"test"'), symbol(',')], new StringNode('"test"'), [symbol(',')]);
         });
         it('should parse number literal', () => {
-            parser.init([new Token('20.43', NUMBER_LITERAL), symbol(',')]);
-            const node = parser.parseTerm();
-            expect(node).toEqual(new NumberNode('20.43'));
-            expect(parser.tokens).toEqual([symbol(',')]);
+            testParse([number('20.43'), symbol(',')], new NumberNode('20.43'), [symbol(',')]);
         });
         it('should parse cell literal', () => {
-            parser.init([new Token('A3', CELL_LITERAL), symbol(',')]);
-            const node = parser.parseTerm();
-            expect(node).toEqual(new CellNode('A3'));
-            expect(parser.tokens).toEqual([symbol(',')]);
+            testParse([cell('A3'), symbol(',')], new CellNode('A3'), [symbol(',')]);
         });
         it('should parse cell range', () => {
-            parser.init([new Token('A3', CELL_LITERAL), symbol(':'), new Token('B5', CELL_LITERAL), symbol(',')]);
-            const node = parser.parseTerm();
-            expect(node).toEqual(new CellRangeNode('A3', 'B5'));
-            expect(parser.tokens).toEqual([symbol(',')]);
+            testParse([cell('A3'), symbol(':'), cell('B5'), symbol(',')], new CellRangeNode('A3', 'B5'), [symbol(',')]);
         });
         it('should throw error when syntax errors found', () => {
             testError([symbol(',')], /unexpected symbol ','/i);
-            testError([new Token('sum', IDENTIFIER)], /unexpected identifier 'sum'/i);
-            testError([new Token('A3', CELL_LITERAL), symbol(':'), new Token('25', NUMBER_LITERAL)],
+            testError([identifier('sum')], /unexpected identifier 'sum'/i);
+            testError([cell('A3'), symbol(':'), number('25')],
                 /expected cellLiteral but found numberLiteral '25'/i);
             testError([], /unexpected end of input/i);
         });
     });
 
     describe('parseFunctionCall', () => {
-        const testError = createErrorTesterFor(() => parser.parseFunctionCall());
+        const { testParse, testError } = createParseTestersFor(() => parser.parseFunctionCall());
 
         it('should parse call with no args', () => {
             parser.init([identifier('sum'), symbol('('), symbol(')')]);
@@ -166,8 +146,7 @@ describe('Parser', () => {
     });
 
     describe('parseExpression', () => {
-        const testError = createErrorTesterFor(() => parser.parseExpression());
-        const testParse = createParserTesterFor(() => parser.parseExpression());
+        const { testParse, testError } = createParseTestersFor(() => parser.parseExpression());
 
         it('should parse function call', () => {
             testParse(
