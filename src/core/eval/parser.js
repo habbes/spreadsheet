@@ -56,7 +56,7 @@ export class Parser {
         if (token.type === types.CELL_LITERAL && this.isNextValue(':')) {
             this.consumeValue(':');
             const token2 = this.consumeType(types.CELL_LITERAL);
-            return new CellRangeNode(token.value, token2.value);
+            return new CellRangeNode([token.value, token2.value]);
         }
 
         switch (token.type) {

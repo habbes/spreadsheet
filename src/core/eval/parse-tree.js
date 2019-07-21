@@ -41,10 +41,6 @@ export class CellNode extends ParseTree {
 
 export class CellRangeNode extends ParseTree {
     type = 'cellRange';
-
-    constructor (startCell, endCell) {
-        super([startCell, endCell])
-    }
 }
 
 export class FunctionCallNode extends ParseTree {

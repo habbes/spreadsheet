@@ -52,7 +52,7 @@ describe('Parser', () => {
         it('should parse cell range', () => {
             testParse(
                 [cell('A3'), symbol(':'), cell('B5'), symbol(',')],
-                new CellRangeNode('A3', 'B5'),
+                new CellRangeNode(['A3', 'B5']),
                 [symbol(',')]
             );
         });
@@ -92,7 +92,7 @@ describe('Parser', () => {
                     new NumberNode('23.4'),
                     new CellNode('B2'),
                     new StringNode('"test"'),
-                    new CellRangeNode('C10', 'C15')
+                    new CellRangeNode(['C10', 'C15'])
                 ]),
                 [symbol(',')]
             );
@@ -111,7 +111,7 @@ describe('Parser', () => {
                 new FunctionCallNode('func', [
                     new CellNode('C4'),
                     new FunctionCallNode('func2', [
-                        new CellRangeNode('B4', 'G4')
+                        new CellRangeNode(['B4', 'G4'])
                     ]),
                     new FunctionCallNode('func3', [
                         new FunctionCallNode('func4', [])
@@ -144,13 +144,13 @@ describe('Parser', () => {
         it('should parse function call', () => {
             testParse(
                 [identifier('func'), symbol('('), cell('B4'), symbol(':'), cell('B10'), symbol(')')],
-                new FunctionCallNode('func', [new CellRangeNode('B4', 'B10')]),
+                new FunctionCallNode('func', [new CellRangeNode(['B4', 'B10'])]),
                 []
             );
         });
         it('should parse term', () => {
             testParse([cell('A3')], new CellNode('A3'), []);
-            testParse([cell('A3'), symbol(':'), cell('C3')], new CellRangeNode('A3', 'C3'), []);
+            testParse([cell('A3'), symbol(':'), cell('C3')], new CellRangeNode(['A3', 'C3']), []);
             testParse([number('3')], new NumberNode('3'), []);
             testParse([string('"a"')], new StringNode('"a"'), []);
         });
@@ -211,7 +211,7 @@ describe('parseSource', () => {
         testParseSource(
             'SUM(A3:A10, 30, "two", AVG(A5, B4))',
             new FunctionCallNode('SUM', [
-                new CellRangeNode('A3', 'A10'),
+                new CellRangeNode(['A3', 'A10']),
                 new NumberNode('30'),
                 new StringNode('"two"'),
                 new FunctionCallNode('AVG', [
