@@ -72,4 +72,13 @@ export class CellRangeNode extends ParseTree {
 
 export class FunctionCallNode extends ParseTree {
     type = 'functionCall';
+
+    evaluate (context) {
+        const fn = context.functions[this.value];
+        if (!fn) {
+            throw new Error(`Unknown function ${this.value}`);
+        }
+        const args = this.children.map(node => node.evaluate(context));
+        return fn(...args);
+    }
 }
