@@ -35,7 +35,15 @@ export class CellNode extends ParseTree {
     evaluate (context) {
         const coord = alphaToIndexCoord(this.value);
         const cell = evaluateCellAt(coord, context);
-        return cell ? cell.value : undefined;
+        if (!cell) {
+            return;
+        }
+        if (cell.value) {
+            return cell.value;
+        }
+        if (cell.error) {
+            throw new Error(`Error found in dependent cell '${this.value}'`);
+        }
     }
 }
 
