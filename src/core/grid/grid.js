@@ -20,16 +20,6 @@ export class Grid {
         return this.matrix[this._getKey(coord)];
     }
 
-    getCoordsInRange([x1, y1], [x2, y2]) {
-        const coords = [];
-        for (let y = y1; y <= y2; y++) {
-            for (let x = x1; x <= x2; x++) {
-                coords.push([x, y]);
-            }
-        }
-        return coords;
-    }
-
     getValues(coords) {
         return coords.map(coord => this.getAt(coord));
     }

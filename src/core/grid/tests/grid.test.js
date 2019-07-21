@@ -55,52 +55,6 @@ describe('Grid', () => {
             });
         });
 
-        describe('getCoordsInRange', () => {
-            it('should return all coordinates in the specified inclusive row range', () => {
-                const x1 = 2, y1 = 10,
-                    x2 = 5, y2 = 10;
-                const coords = grid.getCoordsInRange([x1, y1], [x2, y2]);
-                expect(coords).toEqual([
-                    [2, 10], [3, 10], [4, 10], [5, 10]
-                ]);
-            });
-            it('should return all coordinates in the specified inclusive column range', () => {
-                const x1 = 20, y1 = 40,
-                    x2 = 20, y2 = 43;
-                const coords = grid.getCoordsInRange([x1, y1], [x2, y2]);
-                expect(coords).toEqual([
-                    [20, 40],
-                    [20, 41],
-                    [20, 42],
-                    [20, 43]
-                ]);
-            });
-            it('should return all coordinates in the specified box range', () => {
-                const x1 = 18, y1 = 40,
-                    x2 = 20, y2 = 43;
-                const coords = grid.getCoordsInRange([x1, y1], [x2, y2]);
-                expect(coords).toEqual([
-                    [18, 40], [19, 40], [20, 40],
-                    [18, 41], [19, 41], [20, 41],
-                    [18, 42], [19, 42], [20, 42],
-                    [18, 43], [19, 43], [20, 43],
-                ]);
-            });
-        });
-
-        describe('getValuesInRange', () => {
-            it('should return all the values in the specified range', () => {
-                const x1 = 1, y1 = 2, x2 = 3, y2 = 4;
-                const values = ['a', 'b'];
-                jest.spyOn(grid, 'getCoordsInRange').mockReturnValue([[x1, y1], [x2, y2]]);
-                jest.spyOn(grid, 'getValues').mockReturnValue(values);
-                const res = grid.getValuesInRange([x1, y1], [x2, y2]);
-                expect(grid.getCoordsInRange).toHaveBeenCalledWith([1, 2], [3, 4]);
-                expect(grid.getValues).toHaveBeenCalledWith([[1, 2], [3, 4]]);
-                expect(res).toEqual(values);
-            });
-        });
-
         describe('getCoordsWithInputs', () => {
             it('should return the coords of all the values with inputs', () => {
                 grid.setAt([0, 10], 'test');
