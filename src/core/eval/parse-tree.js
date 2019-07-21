@@ -1,4 +1,4 @@
-import { alphaToIndexCoord } from '../grid';
+import { alphaToIndexCoord, getCoordsInRange } from '../grid';
 import { evaluateCellAt} from './eval';
 
 export class ParseTree {
@@ -49,6 +49,25 @@ export class CellNode extends ParseTree {
 
 export class CellRangeNode extends ParseTree {
     type = 'cellRange';
+
+    evaluate (context) {
+        const [start, end] = this.value.map(alphaToIndexCoord);
+        const coords = getCoordsInRange(start, end);
+        const cells = [];
+        for (const coord of coords) {
+            const cell = evaluateCellAt(coord, context);
+            if (!cell) {
+                return;
+            }
+            if (cell.value) {
+                cells.push(cell.value);
+            }
+            if (cell.error) {
+                throw new Error(`Error found in dependent cell '${coord}'`);
+            }
+        }
+        return cells;
+    }
 }
 
 export class FunctionCallNode extends ParseTree {
