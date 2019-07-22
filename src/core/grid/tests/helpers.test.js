@@ -1,4 +1,4 @@
-import { alphaToIndexCoord, getCoordsInRange } from '../helpers';
+import { alphaToIndexCoord, getCoordsInRange, indexCoordToAlpha } from '../helpers';
 
 describe('alphaToIndexCoord', () => {
     it('should convert alphanumeric cell coord to numerical indices', () => {
@@ -10,6 +10,15 @@ describe('alphaToIndexCoord', () => {
 
     it('should NOT be case sensitive', () => {
         expect(alphaToIndexCoord('b3')).toEqual([1, 2]);
+    });
+});
+
+describe('indexCoordToAlpha', () => {
+    it('should convert coordinate indices to alphanumeric cell id', () => {
+        expect(indexCoordToAlpha([0, 0])).toBe('A1');
+        expect(indexCoordToAlpha([0, 1])).toBe('A2');
+        expect(indexCoordToAlpha([1, 2])).toBe('B3');
+        expect(indexCoordToAlpha([25, 49])).toBe('Z50');
     });
 });
 

@@ -1,4 +1,4 @@
-import { alphaToIndexCoord, getCoordsInRange } from '../grid';
+import { alphaToIndexCoord, getCoordsInRange, indexCoordToAlpha } from '../grid';
 import { evaluateCellAt} from './eval';
 
 export class ParseTree {
@@ -63,7 +63,7 @@ export class CellRangeNode extends ParseTree {
                 cells.push(cell.value);
             }
             if (cell.error) {
-                throw new Error(`Error found in dependent cell '${coord}'`);
+                throw new Error(`Error found in dependent cell '${indexCoordToAlpha(coord)}'`);
             }
         }
         return cells;
