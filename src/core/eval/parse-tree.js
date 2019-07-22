@@ -74,9 +74,9 @@ export class FunctionCallNode extends ParseTree {
     type = 'functionCall';
 
     evaluate (context) {
-        const fn = context.functions[this.value];
+        const fn = context.functions[this.value.toLowerCase()];
         if (!fn) {
-            throw new Error(`Unknown function ${this.value}`);
+            throw new Error(`Unknown function '${this.value}'`);
         }
         const args = this.children.map(node => node.evaluate(context));
         return fn(...args);
