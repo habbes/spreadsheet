@@ -1,24 +1,12 @@
-export function sum(...args) {
-    return args.reduce((total, item) => {
-        if (typeof item === 'number') {
-            return total + item;
-        }
-        if (Array.isArray(item)) {
-            return total + sum(...item);
-        }
-        throw new Error(`Invalid argument for SUM: ${item}`);
-    }, 0);
-}
+import { makeNumberReducer } from './helpers';
 
-export function avg(...args) {
-    const [total, count] = args.reduce(([total, count], item) => {
-        if (typeof item === 'number') {
-            return [total + item, count + 1];
-        }
-        if (Array.isArray(item)) {
-            return [total + sum(...item), count + item.length];
-        }
-        throw new Error(`Invalid argument for AVG: ${item}`);
-    }, [0, 0]);
+export const sum = makeNumberReducer('SUM', (a, b) => a + b, 0);
+
+export const product = makeNumberReducer('PRODUCT', (a, b) => a * b, 1);
+
+const avgCounter = makeNumberReducer('AVG', ([total, count], curr) => [total + curr, count + 1], [0, 0]);
+
+export function avg (...args) {
+    const [total, count] = avgCounter(...args);
     return total / count;
 }
