@@ -38,7 +38,7 @@ export class CellNode extends ParseTree {
         if (!cell) {
             return;
         }
-        if (cell.value) {
+        if (typeof cell.value !== 'undefined') {
             return cell.value;
         }
         if (cell.error) {
@@ -59,7 +59,7 @@ export class CellRangeNode extends ParseTree {
             if (!cell) {
                 return;
             }
-            if (cell.value) {
+            if (typeof cell.value !== 'undefined') {
                 cells.push(cell.value);
             }
             if (cell.error) {
