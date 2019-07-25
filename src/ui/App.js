@@ -1,5 +1,5 @@
 import React from 'react';
-import { indexCoordToAlpha } from '../core/grid';
+import { indexCoordToAlpha } from '../core';
 
 import Cell from './Cell';
 import './App.css';

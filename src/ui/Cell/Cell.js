@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { indexCoordToAlpha } from '../../core/grid';
+import { indexCoordToAlpha } from '../../core';
 import { updateCell } from '../store/actions';
-
 
 export class Cell extends React.Component {
   constructor(props) {
