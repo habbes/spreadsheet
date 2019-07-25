@@ -2,6 +2,8 @@ import React from 'react';
 import { indexCoordToAlpha, Grid } from '../core/grid';
 import { Parser, evaluateGrid } from '../core/eval';
 import * as functions from '../core/functions';
+
+import Cell from './Cell';
 import './App.css';
 
 const COLS = 26;
@@ -14,23 +16,6 @@ function addInput (coord, input) {
   inputGrid.setAt(coord, input);
   const outGrid = evaluateGrid(inputGrid, functions, parser);
   return outGrid;
-}
-
-function Cell({ row, col, cell, onChange }) {
-  const id = indexCoordToAlpha([col, row]);
-  const value = cell ? cell.value : '';
-  return (
-    <div class="Cell" title={id}>
-      <input
-        className="Cell-input"
-        value={value}
-        onChange={(e) => onChange({
-          input: e.target.value,
-          coord: [col, row]
-        })}
-      />
-    </div>
-  )
 }
 
 function generateCells(outGrid, onChange) {
