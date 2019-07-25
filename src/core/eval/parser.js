@@ -1,6 +1,5 @@
-import { Token } from './token';
 import * as types from './token-types';
-import { CellRangeNode, FunctionCallNode, NumberNode, StringNode, CellNode, ParseTree } from './parse-tree';
+import { CellRangeNode, FunctionCallNode, NumberNode, StringNode, CellNode } from './parse-tree';
 import { lex } from './lexer';
 
 export class Parser {
