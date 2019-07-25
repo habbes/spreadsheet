@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { indexCoordToAlpha } from '../../core';
+import { indexCoordToAlpha } from '../../lib';
 import { updateCell } from '../store/actions';
 
 export class Cell extends React.Component {

@@ -1,5 +1,5 @@
-import { Spreadsheet } from '../core';
-import * as functions from '../core/functions';
+import { Spreadsheet } from '../lib';
+import * as functions from '../lib/functions';
 
 const spreadsheet = new Spreadsheet(functions);
 export const initialGrid = spreadsheet.evaluate();

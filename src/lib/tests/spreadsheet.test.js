@@ -3,9 +3,12 @@ import { Cell } from '../cell';
 import { Spreadsheet } from '../spreadsheet';
 
 describe('Spreadsheet', () => {
-    it('should parse input grid and return output grid with evaluated cells', () => {
-        const spreadsheet = new Spreadsheet(functions);
+    let spreadsheet;
+    beforeEach(() => {
+        spreadsheet = new Spreadsheet(functions);
+    })
 
+    it('should parse inputs and return output grid with evaluated cells', () => {
         // set A1:A5 to 0, 5, 10, 15, 20
         for (let i = 0; i < 5; i++) {
             spreadsheet.setInput([0, i], String(i * 5));
@@ -36,13 +39,11 @@ describe('Spreadsheet', () => {
     });
 
     it('should set errors correctly', () => {
-        const spreadhseet = new Spreadsheet(functions);
+        spreadsheet.setInput([0, 0], 'test');
+        spreadsheet.setInput([0, 1], '=SUM(A1)');
+        spreadsheet.setInput([0, 2], '=A2')
 
-        spreadhseet.setInput([0, 0], 'test');
-        spreadhseet.setInput([0, 1], '=SUM(A1)');
-        spreadhseet.setInput([0, 2], '=A2')
-
-        const outGrid = spreadhseet.evaluate();
+        const outGrid = spreadsheet.evaluate();
 
         expect(outGrid.getAt([0, 0])).toEqual(new Cell('test', 'test'));
         expect(outGrid.getAt([0, 1])).toEqual(new Cell('=SUM(A1)', undefined, 'Invalid argument for SUM: test'));

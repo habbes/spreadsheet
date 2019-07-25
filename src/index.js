@@ -1,1 +1,1 @@
-import './ui/index';
+import './app/index';

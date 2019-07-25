@@ -1,7 +1,7 @@
 import React from 'react';
-import { indexCoordToAlpha } from '../core';
+import { indexCoordToAlpha } from '../../lib';
 
-import Cell from './Cell';
+import Cell from '../Cell';
 import './App.css';
 
 const COLS = 26;
