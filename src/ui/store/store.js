@@ -3,4 +3,6 @@ import * as reducers from './reducers';
 
 const appReducer = combineReducers(reducers);
 
-export const store = createStore(appReducer);
+const store = createStore(appReducer);
+
+export default store;

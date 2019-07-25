@@ -1,6 +1,6 @@
 import { Grid } from '../../core/grid';
-import { Parser, evaluateGrid } from '../core/eval';
-import * as functions from '../core/functions';
+import { Parser, evaluateGrid } from '../../core/eval';
+import * as functions from '../../core/functions';
 
 import * as types from './action-types';
 

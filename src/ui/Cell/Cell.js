@@ -1,5 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { indexCoordToAlpha } from '../../core/grid';
+import { updateCell } from '../store/actions';
 
 
 export class Cell extends React.Component {
@@ -31,7 +33,7 @@ export class Cell extends React.Component {
   }
 
   render() {
-    const { row, col, onChange } = this.props;
+    const { row, col, updateCell } = this.props;
     const id = indexCoordToAlpha([col, row]);
     return (
       <div className="Cell" title={id}>
@@ -40,7 +42,7 @@ export class Cell extends React.Component {
           value={this.getValue()}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
-          onChange={(e) => onChange({
+          onChange={(e) => updateCell({
             input: e.target.value,
             coord: [col, row]
           })}
@@ -50,4 +52,10 @@ export class Cell extends React.Component {
   }
 }
 
-export default Cell;
+const mapStateToProps = ({ grid }, { row, col }) => ({
+  cell: grid.getAt([col, row])
+});
+
+const mapDispatchToProps = { updateCell };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cell);

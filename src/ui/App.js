@@ -1,7 +1,5 @@
 import React from 'react';
-import { indexCoordToAlpha, Grid } from '../core/grid';
-import { Parser, evaluateGrid } from '../core/eval';
-import * as functions from '../core/functions';
+import { indexCoordToAlpha } from '../core/grid';
 
 import Cell from './Cell';
 import './App.css';
@@ -9,16 +7,8 @@ import './App.css';
 const COLS = 26;
 const ROWS = 50;
 
-const inputGrid = new Grid();
-const parser = new Parser();
 
-function addInput (coord, input) {
-  inputGrid.setAt(coord, input);
-  const outGrid = evaluateGrid(inputGrid, functions, parser);
-  return outGrid;
-}
-
-function generateCells(outGrid, onChange) {
+function generateCells() {
   const cells = [];
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
@@ -29,8 +19,6 @@ function generateCells(outGrid, onChange) {
           id={`Cell-${id}`}
           row={row}
           col={col}
-          cell={outGrid.getAt([col, row])}
-          onChange={onChange}
         />
       ))
     }
@@ -38,33 +26,18 @@ function generateCells(outGrid, onChange) {
   return cells;
 }
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      outGrid: new Grid()
-    };
-
-    this.onCellChange = this.onCellChange.bind(this);
-  }
-
-  onCellChange({ coord, input }) {
-    this.setState({ outGrid: addInput(coord, input) });
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-        </header>
-        <div className="App-formula-bar">
-        </div>
-        <div className="Grid" style={{gridTemplateColumns: `${new Array(COLS).fill('1fr').join(' ')}`}}>
-          {generateCells(this.state.outGrid, this.onCellChange)}
-        </div>
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+      </header>
+      <div className="App-formula-bar">
       </div>
-    );
-  }
+      <div className="Grid" style={{gridTemplateColumns: `${new Array(COLS).fill('1fr').join(' ')}`}}>
+        {generateCells()}
+      </div>
+    </div>
+  );
 }
 
 export default App;
