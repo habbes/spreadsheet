@@ -24,12 +24,6 @@ export class Grid {
         return coords.map(coord => this.getAt(coord));
     }
 
-    getValuesInRange(startCoord, endCoord) {
-        return this.getValues(
-            this.getCoordsInRange(startCoord, endCoord)
-        );
-    }
-
     getCoordsWithValues() {
         return Object.keys(this.matrix).map(
             key => key.split(',').map(c => Number(c))
