@@ -131,7 +131,7 @@ describe('Parser', () => {
             testError([identifier('sum'), symbol('('), cell('A4')], /unexpected end of input/i);
             testError([identifier('sum'), symbol('('), cell('A4'), symbol(',')], /unexpected end of input/i);
 
-            testError([identifier('sum'), symbol('('), symbol('(')], /unexpected symbol '\('/i);
+            testError([identifier('sum'), symbol('('), symbol('(')], /unexpected end of input/i);
             testError([identifier('sum'), symbol('('), number('24'), symbol('-')], /expected , or \) but found '-'/i);
             testError([cell('a3')], /expected identifier but found cellLiteral 'a3'/i);
             testError([identifier('sum'), symbol('('), identifier('func2'), symbol(')')], /expected \( but found '\)'/i);
@@ -153,11 +153,6 @@ describe('Parser', () => {
             testParse([cell('A3'), symbol(':'), cell('C3')], new CellRangeNode(['A3', 'C3']), []);
             testParse([number('3')], new NumberNode('3'), []);
             testParse([string('"a"')], new StringNode('"a"'), []);
-        });
-        it('should throw error on unexpected tokens', () => {
-            testError([symbol(',')], /unexpected symbol ','/i);
-            testError([identifier('func')], /unexpected end of input/i);
-            testError([], /unexpected end of input/i);
         });
         it('calls parseFunctionCall if next token is an identifier', () => {
             jest.spyOn(parser, 'parseFunctionCall').mockReturnValue(new FunctionCallNode('test', []));
@@ -194,6 +189,34 @@ describe('Parser', () => {
                 ),
                 []
             );
+        });
+        it('should parse expression with enclosing parentheses', () => {
+            testParse(
+                [symbol('('), cell('A3'), symbol(')')],
+                new CellNode('A3'),
+                []
+            );
+
+            testParse(
+                [symbol('-'), symbol('('), number('-10'), symbol(')'), symbol(',')],
+                new NegativeNode(
+                    new NumberNode('-10')
+                ),
+                [symbol(',')]
+            );
+
+            testParse(
+                [symbol('('), symbol('('), string('"test"'), symbol(')'), symbol(')')],
+                new StringNode('"test"'),
+                []
+            );
+        });
+
+        it('should throw error on unexpected tokens', () => {
+            testError([symbol(',')], /unexpected symbol ','/i);
+            testError([identifier('func')], /unexpected end of input/i);
+            testError([symbol('('), symbol('('), number('10'), symbol(')')], /unexpected end of input/i);
+            testError([], /unexpected end of input/i);
         });
     });
 });

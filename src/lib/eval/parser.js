@@ -95,12 +95,22 @@ export class Parser {
         return new NegativeNode(expr);
     }
 
+    parseParenExpression() {
+        this.consumeValue('(');
+        const expr = this.parseExpression();
+        this.consumeValue(')');
+        return expr;
+    }
+
     parseExpression () {
         if (this.isNextType(types.IDENTIFIER)) {
             return this.parseFunctionCall();
         }
         if (this.isNextValue('-')) {
             return this.parseNegativeExpression();
+        }
+        if (this.isNextValue('(')) {
+            return this.parseParenExpression();
         }
         return this.parseTerm();
     }
