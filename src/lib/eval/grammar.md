@@ -10,7 +10,7 @@ SUM(A3:B3, 1, 2 "ser", AVG(3, 5, A3:A4))
 - `)`
 - `-`
 
-**numberLiteral**: [`0-9`]+(`.` `[0-9]`+)?
+**numberLiteral**: `-`?[`0-9`]+(`.` `[0-9]`+)?
 
 **stringLiteral**: a sequence of characters enclosed in `"` (excluding `"`)
 

@@ -33,8 +33,11 @@ describe('ParseTree.evaluate()', () => {
     }
 
     describe('NumberNode', () => {
-        it('should number value', () => {
+        it('should return number value', () => {
             testEvaluate(new NumberNode('24.5'), 24.5);
+        });
+        it('should return negative number value', () => {
+            testEvaluate(new NumberNode('-12.3'), -12.3);
         });
     });
 
