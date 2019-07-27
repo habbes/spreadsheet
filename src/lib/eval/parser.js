@@ -1,5 +1,5 @@
 import * as types from './token-types';
-import { CellRangeNode, FunctionCallNode, NumberNode, StringNode, CellNode } from './parse-tree';
+import { CellRangeNode, FunctionCallNode, NumberNode, StringNode, CellNode, NegativeNode } from './parse-tree';
 import { lex } from './lexer';
 
 export class Parser {
@@ -89,9 +89,18 @@ export class Parser {
         return new FunctionCallNode(name.value, args);
     }
 
+    parseNegativeExpression() {
+        this.consumeValue('-');
+        const expr = this.parseExpression();
+        return new NegativeNode(expr);
+    }
+
     parseExpression () {
         if (this.isNextType(types.IDENTIFIER)) {
             return this.parseFunctionCall();
+        }
+        if (this.isNextValue('-')) {
+            return this.parseNegativeExpression();
         }
         return this.parseTerm();
     }

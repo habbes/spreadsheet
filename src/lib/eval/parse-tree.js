@@ -70,6 +70,22 @@ export class CellRangeNode extends ParseTree {
     }
 }
 
+export class NegativeNode extends ParseTree {
+    type = 'negative';
+
+    constructor (child) {
+        super('-', [child])
+    }
+
+    evaluate (context) {
+        const operand = this.children[0].evaluate(context);
+        if (typeof operand !== 'number') {
+            throw new Error(`Cannot get negative of non-number ${operand}`);
+        }
+        return -operand;
+    }
+}
+
 export class FunctionCallNode extends ParseTree {
     type = 'functionCall';
 

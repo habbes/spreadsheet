@@ -1,4 +1,4 @@
-import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode } from '../parse-tree';
+import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode, NegativeNode } from '../parse-tree';
 import { Grid } from '../../grid';
 import { Parser } from '../parser';
 import * as evaluator from '../eval';
@@ -30,6 +30,10 @@ describe('ParseTree.evaluate()', () => {
 
     function testEvaluate(node, expectedValue) {
         expect(node.evaluate(context)).toEqual(expectedValue);
+    }
+
+    function testError(node, expectedError) {
+        expect(() => node.evaluate(context)).toThrow(expectedError);
     }
 
     describe('NumberNode', () => {
@@ -106,6 +110,29 @@ describe('ParseTree.evaluate()', () => {
                 .mockReturnValueOnce(cell3);
             
             expect(() => new CellRangeNode(['C4', 'C6']).evaluate(context)).toThrow(/error found in dependent cell 'C5'/i);
+        });
+    });
+
+    describe('NegativeNode', () => {
+        it('should return the negative of the evaluated child', () => {
+            let child = {
+                evaluate: jest.fn().mockReturnValue(10)
+            };
+            testEvaluate(new NegativeNode(child), -10);
+            child = {
+                evaluate: jest.fn().mockReturnValue(-20)
+            };
+            testEvaluate(new NegativeNode(child), 20);
+        });
+        it('should throw error if child does not evaluate to a number', () => {
+            let child = {
+                evaluate: jest.fn().mockReturnValue('non number')
+            };
+            testError(new NegativeNode(child), /cannot get negative of non-number/i);
+            child = {
+                evaluate: jest.fn().mockReturnValue([1, 2])
+            };
+            testError(new NegativeNode(child), /cannot get negative of non-number/i);
         });
     });
 

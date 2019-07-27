@@ -1,6 +1,6 @@
 import { Parser, parseSource } from '../parser';
 import { number, string, cell, symbol, identifier } from '../token';
-import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode } from '../parse-tree';
+import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode, NegativeNode } from '../parse-tree';
 
 describe('Parser', () => {
     /**
@@ -168,7 +168,7 @@ describe('Parser', () => {
             expect(parser.parseFunctionCall).toHaveBeenCalled();
             expect(parser.parseTerm).not.toHaveBeenCalled();
         });
-        it('calls parseTerm if next token is NOT an identifier', () => {
+        it('calls parseTerm if next token is NOT an identifier or -', () => {
             jest.spyOn(parser, 'parseFunctionCall');
             jest.spyOn(parser, 'parseTerm').mockReturnValue(new CellNode('A3'));
             parser.init([symbol(',')]);
@@ -176,6 +176,24 @@ describe('Parser', () => {
             expect(node).toEqual(new CellNode('A3'));
             expect(parser.parseFunctionCall).not.toHaveBeenCalled();
             expect(parser.parseTerm).toHaveBeenCalled();
+        });
+        it('should parse negative expression', () => {
+            testParse(
+                [symbol('-'), cell('A3')],
+                new NegativeNode(
+                    new CellNode('A3')
+                ),
+                []
+            );
+            testParse(
+                [symbol('-'), identifier('sum'), symbol('('), cell('A3'), symbol(':'), cell('A5'), symbol(')')],
+                new NegativeNode(
+                    new FunctionCallNode('sum', [
+                        new CellRangeNode(['A3', 'A5'])
+                    ])
+                ),
+                []
+            );
         });
     });
 });
