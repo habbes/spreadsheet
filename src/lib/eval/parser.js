@@ -135,23 +135,19 @@ export class Parser {
         const stack = [];
         const postfix = [];
 
-        let operand = this.parseOperandExpression();
-        postfix.push(operand);
+        postfix.push(this.parseOperandExpression());
         
         while (this.isNextBinaryOperator()) {
             const operator = this.consumeBinaryOperator();
             while (stack.length && hasHigherOrEqualPrecedence(stack[stack.length -1], operator)) {
-                const prevOp = stack.pop();
-                postfix.push(prevOp);
+                postfix.push(stack.pop());
             }
             stack.push(operator);
-            operand = this.parseOperandExpression();
-            postfix.push(operand);
+            postfix.push(this.parseOperandExpression());
         }
 
         while (stack.length) {
-            const operator = stack.pop();
-            postfix.push(operator);
+            postfix.push(stack.pop());
         }
         return reducePostfixExpression(postfix);
     }
