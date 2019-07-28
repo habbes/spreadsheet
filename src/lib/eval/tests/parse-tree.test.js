@@ -1,4 +1,4 @@
-import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode, NegativeNode } from '../parse-tree';
+import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode, NegativeNode, AdditionNode, SubtractionNode, MultiplicationNode, DivisionNode } from '../parse-tree';
 import { Grid } from '../../grid';
 import { Parser } from '../parser';
 import * as evaluator from '../eval';
@@ -168,6 +168,74 @@ describe('ParseTree.evaluate()', () => {
 
             expect(() => new FunctionCallNode('sum', [child1, child2]).evaluate(context))
                 .toThrow(/some error/i);
+        });
+    });
+
+    describe('Binary arithmetic operators', () => {
+        let left;
+        let right;
+        beforeEach(() => {
+            left = {
+                evaluate: jest.fn().mockReturnValue(10)
+            };
+            right = {
+                evaluate: jest.fn().mockReturnValue(20)
+            };
+        });
+
+        function testBinaryOperator(Node, expectedValue) {
+            testEvaluate(new Node(left, right), expectedValue);
+            expect(left.evaluate).toHaveBeenCalledWith(context);
+            expect(right.evaluate).toHaveBeenCalledWith(context);
+        }
+        function testArgumentError(Node, expectedError) {
+            left = {
+                evaluate: jest.fn().mockReturnValue('test')
+            };
+            const node = new Node(left, right);
+            testError(node, `Invalid argument for operator ${node.value}`);
+        }
+
+        describe('AdditionNode', () => {
+            it('should evaluate left and right operands and return their sum', () => {
+                testBinaryOperator(AdditionNode, 30);
+            });
+            it('should throw error if an argument is not a number', () => {
+                testArgumentError(AdditionNode);
+            });
+        });
+
+        describe('SubtractionNode', () => {
+            it('should evaluate left and right operands and return their difference', () => {
+                testBinaryOperator(SubtractionNode, -10);
+            });
+            it('should throw error if an argument is not a number', () => {
+                testArgumentError(SubtractionNode);
+            });
+        });
+
+        describe('MultiplicationNode', () => {
+            it('should evaluate left and right operands and return their product', () => {
+                testBinaryOperator(MultiplicationNode, 200);
+            });
+            it('should throw error if an argument is not a number', () => {
+                testArgumentError(MultiplicationNode);
+            });
+        });
+
+        describe('DivisionNode', () => {
+            it('should evaluate left and right operands and return their product', () => {
+                testBinaryOperator(DivisionNode, 0.5);
+            });
+            it('should throw error if an argument is not a number', () => {
+                testArgumentError(DivisionNode);
+            });
+            it('should throw error if right argument is 0', () => {
+                right = {
+                    evaluate: jest.fn().mockReturnValue(0)
+                };
+                testError(new DivisionNode(left, right), /cannot divide by 0/i);
+            });
         });
     });
 });

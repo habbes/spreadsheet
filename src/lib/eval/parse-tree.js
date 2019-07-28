@@ -13,14 +13,6 @@ export class ParseTree {
     }
 }
 
-export class BinaryOperator extends ParseTree {
-    type = 'binaryOperator';
-
-    constructor (left, right) {
-        super(undefined, [left, right]);
-    }
-}
-
 export class StringNode extends ParseTree {
     type = 'string';
 
@@ -107,20 +99,64 @@ export class FunctionCallNode extends ParseTree {
     }
 }
 
+export class BinaryOperator extends ParseTree {
+    type = 'binaryOperator';
+
+    constructor (left, right) {
+        super(undefined, [left, right]);
+    }
+
+    getOperands (context) {
+        const [leftChild, rightChild] = this.children;
+        const left = leftChild.evaluate(context);
+        if (typeof left !== 'number') {
+            throw new Error(`Invalid argument for operator ${this.value}: '${left}'`);
+        }
+        const right = rightChild.evaluate(context);
+        if (typeof right !== 'number') {
+            throw new Error(`Invalid argument for operator ${this.value}: '${right}'`);
+        }
+        return [left, right];
+    }
+}
+
 export class MultiplicationNode extends BinaryOperator {
     value = '*';
+
+    evaluate (context) {
+        const [left, right] = this.getOperands(context);
+        return left * right;
+    }
 }
 
 export class DivisionNode extends BinaryOperator {
     value = '/';
+
+    evaluate (context) {
+        const [left, right] = this.getOperands(context);
+        if (right === 0) {
+            throw new Error('Cannot divide by 0');
+        }
+        return left / right;
+    }
 }
 
 export class AdditionNode extends BinaryOperator {
     value = '+';
+
+    evaluate (context) {
+        const [left, right] = this.getOperands(context);
+        return left + right;
+    }
 }
 
 export class SubtractionNode extends BinaryOperator {
     value = '-';
+
+    evaluate (context) {
+        const [left, right] = this.getOperands(context);
+        return left - right;
+    }
 }
 
 export function createBinaryOperatorFromToken(tokenValue, left, right) {
