@@ -153,21 +153,7 @@ export class Parser {
             const operator = stack.pop();
             postfix.push(operator);
         }
-        return this.reducePostfix(postfix);
-    }
-
-    reducePostfix(postfix) {
-        if (!postfix.length) {
-            throw Error('empty postfix');
-        }
-        const op = postfix.pop();
-        if (op instanceof Token) {
-            const rightOp = this.reducePostfix(postfix);
-            const leftOp = this.reducePostfix(postfix);
-            return createBinaryOperatorFromToken(op.value, leftOp, rightOp);
-        } else {
-            return op;
-        }
+        return reducePostfix(postfix);
     }
 }
 
@@ -183,8 +169,21 @@ export function parseSource(source, parser) {
     return parser.parseExpression();
 }
 
-function hasHigherOrEqualPrecedence(leftToken, token2) {
-    return PRECEDENCE[leftToken.value] > PRECEDENCE[token2.value] ||
-    PRECEDENCE[leftToken.value] === PRECEDENCE[token2.value];
+function hasHigherOrEqualPrecedence(leftToken, rightToken) {
+    return PRECEDENCE[leftToken.value] > PRECEDENCE[rightToken.value] ||
+    PRECEDENCE[leftToken.value] === PRECEDENCE[rightToken.value];
 }
 
+function reducePostfix (postfix) {
+    if (!postfix.length) {
+        throw Error('Unexpected end of expression');
+    }
+    const op = postfix.pop();
+    if (op instanceof Token) {
+        const rightOp = reducePostfix(postfix);
+        const leftOp = reducePostfix(postfix);
+        return createBinaryOperatorFromToken(op.value, leftOp, rightOp);
+    } else {
+        return op;
+    }
+}
