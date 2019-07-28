@@ -13,6 +13,14 @@ export class ParseTree {
     }
 }
 
+export class BinaryOperator extends ParseTree {
+    type = 'binaryOperator';
+
+    constructor (left, right) {
+        super(undefined, [left, right]);
+    }
+}
+
 export class StringNode extends ParseTree {
     type = 'string';
 
@@ -96,5 +104,36 @@ export class FunctionCallNode extends ParseTree {
         }
         const args = this.children.map(node => node.evaluate(context));
         return fn(...args);
+    }
+}
+
+export class MultiplicationNode extends BinaryOperator {
+    value = '*';
+}
+
+export class DivisionNode extends BinaryOperator {
+    value = '/';
+}
+
+export class AdditionNode extends BinaryOperator {
+    value = '+';
+}
+
+export class SubtractionNode extends BinaryOperator {
+    value = '-';
+}
+
+export function createBinaryOperatorFromToken(tokenValue, left, right) {
+    switch  (tokenValue) {
+        case '+':
+            return new AdditionNode(left, right);
+        case '-':
+            return new SubtractionNode(left, right);
+        case '*':
+            return new MultiplicationNode(left, right);
+        case '/':
+            return new DivisionNode(left, right);
+        default:
+            throw new Error(`Unknown binary operator ${tokenValue}`)
     }
 }

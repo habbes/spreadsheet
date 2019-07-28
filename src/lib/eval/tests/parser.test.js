@@ -1,6 +1,6 @@
 import { Parser, parseSource } from '../parser';
 import { number, string, cell, symbol, identifier } from '../token';
-import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode, NegativeNode } from '../parse-tree';
+import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode, NegativeNode, AdditionNode, MultiplicationNode } from '../parse-tree';
 
 describe('Parser', () => {
     /**
@@ -132,7 +132,7 @@ describe('Parser', () => {
             testError([identifier('sum'), symbol('('), cell('A4'), symbol(',')], /unexpected end of input/i);
 
             testError([identifier('sum'), symbol('('), symbol('(')], /unexpected end of input/i);
-            testError([identifier('sum'), symbol('('), number('24'), symbol('-')], /expected , or \) but found '-'/i);
+            testError([identifier('sum'), symbol('('), number('24'), symbol('-')], /unexpected end of input/i);
             testError([cell('a3')], /expected identifier but found cellLiteral 'a3'/i);
             testError([identifier('sum'), symbol('('), identifier('func2'), symbol(')')], /expected \( but found '\)'/i);
         });
@@ -208,6 +208,19 @@ describe('Parser', () => {
             testParse(
                 [symbol('('), symbol('('), string('"test"'), symbol(')'), symbol(')')],
                 new StringNode('"test"'),
+                []
+            );
+        });
+        it.only('should parse binary arithmetic operators in correct precedence order', () => {
+            testParse(
+                [number('10'), symbol('+'), cell('A3'), symbol('*'), number('-2')],
+                new AdditionNode(
+                    new NumberNode('10'),
+                    new MultiplicationNode(
+                        new CellNode('A3'),
+                        new NumberNode('-2')
+                    )
+                ),
                 []
             );
         });

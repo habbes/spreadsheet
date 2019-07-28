@@ -29,6 +29,12 @@ describe('lexer', () => {
             testExtraction(new Token('-', types.SYMBOL), 'C1');
             source = ',B(';
             testExtraction(new Token(',', types.SYMBOL), 'B(');
+            source = '* 10';
+            testExtraction(symbol('*'), ' 10');
+            source = '+A20';
+            testExtraction(symbol('+'), 'A20');
+            source = '/A20';
+            testExtraction(symbol('/'), 'A20');
         });
         it('should extract cell literals', () => {
             source = 'A3:B3';

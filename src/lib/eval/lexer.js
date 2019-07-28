@@ -4,7 +4,7 @@ import { Token } from './token';
 const tokenRules = [
     [/^\s+/, types.WHITESPACE],
     [/^-?[0-9]+(\.[0-9]+)?/, types.NUMBER_LITERAL],
-    [/^[:()\-,]/, types.SYMBOL],
+    [/^[:()\-,+*/]/, types.SYMBOL],
     [/^[a-zA-Z]+\d+/, types.CELL_LITERAL],
     [/^"[^"]*"/, types.STRING_LITERAL],
     [/^[a-zA-Z]+/, types.IDENTIFIER],
