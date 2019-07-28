@@ -66,7 +66,7 @@ export class Parser {
         return this.consumeValue('-', '*', '+', '/');
     }
 
-    parseTerm() {
+    parseTerm () {
         const token = this.consumeNext();
         if (token.type === types.CELL_LITERAL && this.isNextValue(':')) {
             this.consumeValue(':');
@@ -86,7 +86,7 @@ export class Parser {
         }
     }
 
-    parseFunctionCall() {
+    parseFunctionCall () {
         const name = this.consumeType(types.IDENTIFIER);
         this.consumeValue('(');
         if (this.isNextValue(')')) {
@@ -105,13 +105,13 @@ export class Parser {
         return new FunctionCallNode(name.value, args);
     }
 
-    parseNegativeExpression() {
+    parseNegativeExpression () {
         this.consumeValue('-');
         const expr = this.parseExpression();
         return new NegativeNode(expr);
     }
 
-    parseParenExpression() {
+    parseParenExpression () {
         this.consumeValue('(');
         const expr = this.parseExpression();
         this.consumeValue(')');
@@ -153,7 +153,7 @@ export class Parser {
             const operator = stack.pop();
             postfix.push(operator);
         }
-        return reducePostfix(postfix);
+        return reducePostfixExpression(postfix);
     }
 }
 
@@ -163,27 +163,26 @@ export class Parser {
  * @param {Parser} parser
  * @return {ParseTree}
  */
-export function parseSource(source, parser) {
+export function parseSource (source, parser) {
     const tokens = lex(source);
     parser.init(tokens);
     return parser.parseExpression();
 }
 
-function hasHigherOrEqualPrecedence(leftToken, rightToken) {
+function hasHigherOrEqualPrecedence (leftToken, rightToken) {
     return PRECEDENCE[leftToken.value] > PRECEDENCE[rightToken.value] ||
     PRECEDENCE[leftToken.value] === PRECEDENCE[rightToken.value];
 }
 
-function reducePostfix (postfix) {
+function reducePostfixExpression (postfix) {
     if (!postfix.length) {
-        throw Error('Unexpected end of expression');
+        throw new Error('Unexpected end of expression');
     }
     const op = postfix.pop();
     if (op instanceof Token) {
-        const rightOp = reducePostfix(postfix);
-        const leftOp = reducePostfix(postfix);
+        const rightOp = reducePostfixExpression(postfix);
+        const leftOp = reducePostfixExpression(postfix);
         return createBinaryOperatorFromToken(op.value, leftOp, rightOp);
-    } else {
-        return op;
     }
+    return op;
 }

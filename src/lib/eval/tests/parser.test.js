@@ -154,24 +154,6 @@ describe('Parser', () => {
             testParse([number('3')], new NumberNode('3'), []);
             testParse([string('"a"')], new StringNode('"a"'), []);
         });
-        it('calls parseFunctionCall if next token is an identifier', () => {
-            jest.spyOn(parser, 'parseFunctionCall').mockReturnValue(new FunctionCallNode('test', []));
-            jest.spyOn(parser, 'parseTerm');
-            parser.init([identifier('test')]);
-            const node = parser.parseExpression();
-            expect(node).toEqual(new FunctionCallNode('test', []));
-            expect(parser.parseFunctionCall).toHaveBeenCalled();
-            expect(parser.parseTerm).not.toHaveBeenCalled();
-        });
-        it('calls parseTerm if next token is NOT an identifier or -', () => {
-            jest.spyOn(parser, 'parseFunctionCall');
-            jest.spyOn(parser, 'parseTerm').mockReturnValue(new CellNode('A3'));
-            parser.init([symbol(',')]);
-            const node = parser.parseExpression();
-            expect(node).toEqual(new CellNode('A3'));
-            expect(parser.parseFunctionCall).not.toHaveBeenCalled();
-            expect(parser.parseTerm).toHaveBeenCalled();
-        });
         it('should parse negative expression', () => {
             testParse(
                 [symbol('-'), cell('A3')],
