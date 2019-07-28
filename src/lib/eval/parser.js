@@ -167,7 +167,7 @@ export function parseSource (source, parser) {
 
 function hasHigherOrEqualPrecedence (leftToken, rightToken) {
     return PRECEDENCE[leftToken.value] > PRECEDENCE[rightToken.value] ||
-    PRECEDENCE[leftToken.value] === PRECEDENCE[rightToken.value];
+        PRECEDENCE[leftToken.value] === PRECEDENCE[rightToken.value];
 }
 
 function reducePostfixExpression (postfix) {
