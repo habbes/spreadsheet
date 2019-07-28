@@ -1,6 +1,6 @@
 import { Parser, parseSource } from '../parser';
 import { number, string, cell, symbol, identifier } from '../token';
-import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode, NegativeNode, AdditionNode, MultiplicationNode } from '../parse-tree';
+import { NumberNode, StringNode, CellNode, CellRangeNode, FunctionCallNode, NegativeNode, AdditionNode, MultiplicationNode, DivisionNode, SubtractionNode } from '../parse-tree';
 
 describe('Parser', () => {
     /**
@@ -211,7 +211,7 @@ describe('Parser', () => {
                 []
             );
         });
-        it.only('should parse binary arithmetic operators in correct precedence order', () => {
+        it('should parse binary arithmetic operators in correct precedence order', () => {
             testParse(
                 [number('10'), symbol('+'), cell('A3'), symbol('*'), number('-2')],
                 new AdditionNode(
@@ -224,11 +224,45 @@ describe('Parser', () => {
                 []
             );
         });
+        it('should parse arithmetic operations with parentheses groupings', () => {
+            // 2 + 4 * ((C10 - 3 / 2) - 7 + 2) / 4
+            testParse(
+                [
+                    number('2'), symbol('+'), number('4'), symbol('*'),
+                    symbol('('), symbol('('), cell('C10'), symbol('-'), number('3'), symbol('/'), number('2'), symbol(')'),
+                    symbol('-'), number('7'), symbol('+'), number('2'), symbol(')'), symbol('/'), number('4')
+                ],
+                new AdditionNode(
+                    new NumberNode('2'),
+                    new DivisionNode(
+                        new MultiplicationNode(
+                            new NumberNode('4'),
+                            new AdditionNode(
+                                new SubtractionNode(
+                                    new SubtractionNode(
+                                        new CellNode('C10'),
+                                        new DivisionNode(
+                                            new NumberNode('3'),
+                                            new NumberNode('2')
+                                        )
+                                    ),
+                                    new NumberNode('7')
+                                ),
+                                new NumberNode('2')
+                            )
+                        ),
+                        new NumberNode('4')
+                    )
+                ),
+                []
+            );
+        });
 
         it('should throw error on unexpected tokens', () => {
             testError([symbol(',')], /unexpected symbol ','/i);
             testError([identifier('func')], /unexpected end of input/i);
             testError([symbol('('), symbol('('), number('10'), symbol(')')], /unexpected end of input/i);
+            testError([number('2'), symbol('+')], /unexpected end of input/i);
             testError([], /unexpected end of input/i);
         });
     });
@@ -272,6 +306,23 @@ describe('parseSource', () => {
                     new CellNode('A5'), new CellNode('B4')
                 ])
             ])
+        );
+
+        testParseSource(
+            '2 + SUM(3,(A1-A4)*-3)',
+            new AdditionNode(
+                new NumberNode('2'),
+                new FunctionCallNode('SUM', [
+                    new NumberNode('3'),
+                    new MultiplicationNode(
+                        new SubtractionNode(
+                            new CellNode('A1'),
+                            new CellNode('A4')
+                        ),
+                        new NumberNode('-3')
+                    )
+                ])
+            )
         );
     });
 
