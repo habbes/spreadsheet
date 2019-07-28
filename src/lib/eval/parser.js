@@ -1,7 +1,15 @@
 import * as types from './token-types';
 import { Token } from './token';
-import { CellRangeNode, FunctionCallNode, NumberNode, StringNode, CellNode, NegativeNode, createBinaryOperatorFromToken } from './parse-tree';
 import { lex } from './lexer';
+import {
+    CellNode,
+    CellRangeNode,
+    FunctionCallNode,
+    NegativeNode,
+    NumberNode,
+    StringNode,
+    createBinaryOperatorFromToken
+} from './parse-tree';
 
 const PRECEDENCE = {
     '*': 2,
