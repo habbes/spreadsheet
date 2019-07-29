@@ -13,7 +13,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "test:e2e": "yarn cy:run",
+    "test:e2e-watch": "yarn cy:open"
   },
   "eslintConfig": {
     "extends": "react-app"
