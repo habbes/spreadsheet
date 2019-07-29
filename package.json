@@ -17,7 +17,9 @@
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "test:e2e": "yarn cy:run",
-    "test:e2e-watch": "yarn cy:open"
+    "test:e2e-watch": "yarn cy:open",
+    "test:all": "export CI=true && yarn test && yarn test:e2e",
+    "deploy": "yarn build && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
