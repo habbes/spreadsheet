@@ -13,3 +13,5 @@ export function avg (...args) {
     const [total, count] = avgCounter(...args);
     return total / count;
 }
+
+export const average = avg;

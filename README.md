@@ -7,17 +7,29 @@ A simple browser-based spreadsheet app: https://sheets.habbes.xyz
 When an cell on the spreadsheet is updated, all the non-empty cells
 are parsed and evaluated and updated with their new values (or errors). This leaves plenty of room for optimization but should be good enough for a 50x26 grid.
 
+To enter a formula in a cell, prefix the formula expression with `=`, e.g. `=SUM(A1:A10)`.
+
 ### Code organisation
 
 - `src`
     - `app`: contains all the UI code, based on React and Redux
-    - `lib`: contains the all code implementing the core spreadsheet engine
+    - `lib`: contains the modules implementing the core spreadsheet engine
         - `eval`: modules responsible for parsing and evaluating formulae and expressions
             - `grammar.md`: specification for the formula syntax
         - `functions`: implementations of the functions available in the spreadsheet (e.g. SUM, PRODUCT, etc.)
         - `grid`: abstractions for working with 2-D grids
         - `spreadsheet.js`: implements the `Spreadsheet` class that encapsulate the entire spreadsheet engine
 
+The formula syntax is specified in [grammar.md](grammar.md).
+
+Unit tests are located in `tests` folders in the various subfolders under the `src` directory.
+E2E tests are located in `cypress/integration` directory.
+
+### Available functions
+- `AVERAGE` (or `AVG`)
+- `SUM`
+- `PRODUCT`
+- `COUNT`
 
 ## Available Scripts
 
