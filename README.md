@@ -47,11 +47,11 @@ Runs unit tests in interactive mode. Tests are re-run when files are changed.
 
 #### `yarn test:e2e`
 
-Runs e2e tests (using Cypress)
+Runs end-to-end tests (using Cypress)
 
 #### `yarn test:e2e-watch`
 
-Allows you to run e2e tests interactively and watch them on a GUI.
+Allows you to run end-to-end tests interactively and watch them on a GUI.
 
 #### `yarn test:all`
 
