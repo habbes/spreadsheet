@@ -1,0 +1,32 @@
+.Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+    padding: 0px 75px;
+    border-bottom: 1px solid #dbdbdb;;
+}
+
+.logo {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #88846a;
+}
+
+.Header--right {
+    display: flex;
+}
+
+.Header--right > div {
+    margin-right: 25px;
+}
+
+.Header--right > div:last-child {
+    margin-right: 0;
+}
+
+.Header--right a {
+    font-size: 0.85em;
+    text-decoration: none;
+    color: #73705a;
+}
