@@ -36,7 +36,7 @@ function generateCells(rows, cols) {
     return cells;
   }
 
-const Grid = ({ rows, cols }) => (
+export const Grid = ({ rows, cols }) => (
     <div className="Grid" style={{gridTemplateColumns: `75px repeat(${cols}, 120px)`}}>
         {generateColHeaders(cols)}
         {generateCells(rows, cols)}
