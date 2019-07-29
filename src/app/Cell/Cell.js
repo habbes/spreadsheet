@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { indexCoordToAlpha } from '../../lib';
 import { updateCell } from '../store/actions';
 
 import './Cell.css';
@@ -41,8 +40,8 @@ export class Cell extends React.Component {
     }
 
     getTitle () {
-        const { cell, row, col } = this.props;
-        return cell && cell.error ? `Error: ${cell.error}` : indexCoordToAlpha([col, row]);
+        const { cell, id } = this.props;
+        return cell && cell.error ? `Error: ${cell.error}` : id;
     }
 
     getClass () {
@@ -53,10 +52,10 @@ export class Cell extends React.Component {
     }
 
     render() {
-        const { row, col, updateCell } = this.props;
+        const { row, col, id, updateCell } = this.props;
 
         return (
-            <div className={this.getClass()} title={this.getTitle()}>
+            <div className={this.getClass()} title={this.getTitle()} data-cell={id}>
                 <input
                     className="Cell--input"
                     value={this.getValue()}

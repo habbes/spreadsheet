@@ -25,7 +25,7 @@ function generateCells(rows, cols) {
             cells.push((
                 <div className="Grid--cell-container" key={`Cell-${id}`}>
                     <Cell
-                        id={`Cell-${id}`}
+                        id={id}
                         row={row}
                         col={col}
                     />

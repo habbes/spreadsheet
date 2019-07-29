@@ -20,4 +20,10 @@ describe('Grid', () => {
         expect(component.find('.Grid--col-header').length).toBe(2);
         expect(component.find('.Grid--row-header').length).toBe(4);
     });
+
+    it('should render grid with specified number of columns', () => {
+        const component = render();
+        const { style } = component.props();
+        expect(style.gridTemplateColumns.includes('repeat(2'));
+    });
 });
