@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react';
-import { indexCoordToAlpha } from '../../lib';
+import { indexCoordToAlpha, numberToLetterFormat } from '../../lib';
 import Cell from '../Cell';
 import './Grid.css';
 
 function generateColHeaders (cols) {
     const headers = [];
     for (let i = 0; i < cols; i++) {
-        headers.push(<div className="Grid--col-header" key={`Col-header-${i}`}>{ i + 1 }</div>)
+        headers.push(<div className="Grid--col-header" key={`Col-header-${i}`}>{ numberToLetterFormat(i) }</div>)
     }
     return (
         <Fragment>

@@ -1,4 +1,4 @@
-import { alphaToIndexCoord, getCoordsInRange, indexCoordToAlpha } from '../helpers';
+import { alphaToIndexCoord, getCoordsInRange, indexCoordToAlpha, numberToLetterFormat } from '../helpers';
 
 describe('alphaToIndexCoord', () => {
     it('should convert alphanumeric cell coord to numerical indices', () => {
@@ -19,6 +19,13 @@ describe('indexCoordToAlpha', () => {
         expect(indexCoordToAlpha([0, 1])).toBe('A2');
         expect(indexCoordToAlpha([1, 2])).toBe('B3');
         expect(indexCoordToAlpha([25, 49])).toBe('Z50');
+    });
+});
+
+describe('numberToLetterFormat', () => {
+    it('should convert number to letter format', () => {
+        expect(numberToLetterFormat(0)).toBe('A');
+        expect(numberToLetterFormat(24)).toBe('Y');
     });
 });
 

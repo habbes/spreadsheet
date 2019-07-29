@@ -23,6 +23,10 @@ export function indexCoordToAlpha ([x, y]) {
     return `${letterPart}${numberPart}`;
 }
 
+export function numberToLetterFormat (num) {
+    return LETTERS[num].toUpperCase();
+}
+
 export function getCoordsInRange ([x1, y1], [x2, y2]) {
     const coords = [];
     for (let y = y1; y <= y2; y++) {
