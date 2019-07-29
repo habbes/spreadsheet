@@ -1,0 +1,22 @@
+.Grid {
+    display: grid;
+}
+
+.Grid--col-header,
+.Grid--row-header,
+.Grid--col-spacer {
+    background-color: #f2f2f2;
+    color: #3a3737;
+    border-bottom: 1px solid #dbdbdb;
+    border-right: 1px solid #dbdbdb;
+    font-size: 0.8em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Grid--cell-container {
+    box-sizing: border-box;
+    border-right: 1px solid #dbdbdb;
+    border-bottom: 1px solid #dbdbdb;
+}

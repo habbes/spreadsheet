@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { indexCoordToAlpha } from '../../lib';
 import { updateCell } from '../store/actions';
 
+import './Cell.css';
+
 export class Cell extends React.Component {
   constructor(props) {
     super(props);
@@ -37,7 +39,7 @@ export class Cell extends React.Component {
     return (
       <div className="Cell" title={id}>
         <input
-          className="Cell-input"
+          className="Cell--input"
           value={this.getValue()}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
