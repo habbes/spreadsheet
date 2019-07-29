@@ -27,21 +27,36 @@ export class Cell extends React.Component {
 
   getValue () {
     const { cell } = this.props;
+    const { editing } = this.state;
     if (!cell) {
       return '';
     }
-    return this.state.editing ? cell.input : cell.value;
+    if (editing) {
+      return cell.input;
+    }
+    if (cell.error) {
+      return '##ERROR';
+    }
+    return cell.value;
+  }
+
+  getTitle () {
+    const { cell, row, col } = this.props;
+    return cell && cell.error ? `Error: ${cell.error}` : indexCoordToAlpha([col, row]);
   }
 
   getClass () {
-    return `Cell ${this.state.editing ? 'Cell__editing' : ''}`;
+    const { editing } = this.state;
+    const { cell } = this.props;
+    const error = !!(cell && cell.error);
+    return `Cell ${editing ? 'Cell__editing' : ''} ${error ? 'Cell__error' : ''}`;
   }
 
   render() {
     const { row, col, updateCell } = this.props;
-    const id = indexCoordToAlpha([col, row]);
+
     return (
-      <div className={this.getClass()} title={id}>
+      <div className={this.getClass()} title={this.getTitle()}>
         <input
           className="Cell--input"
           value={this.getValue()}
