@@ -4,39 +4,40 @@
 
 - `symbol` 
     - `':'`
+    - `','`
     - `'('`
     - `')'`
     - `'-'`
     - `'+'`
     - `'/'`
     - `'*'`
-- `numberLiteral`:
+- `numberLiteral`
     - `-?[0-9]+(.[0-9]+)?`
-- `stringLiteral`:
+- `stringLiteral`
     - a sequence of characters enclosed in `"` (excluding `"`)
-- `cellLiteral`:
+- `cellLiteral`
     - `[a-zA-Z]+\d+`
-- `identifier`:
+- `identifier`
     - `[a-zA-Z]+`
 
 
 ## Program structure
 
-- `cellRange`:
+- `cellRange`
     - `cellLiteral ':' cellLiteral`
-- `term`:
+- `term`
     - `cellLiteral`
     - `numberLiteral`
     - `stringLiteral`
     - `cellRange`
-- `functionArgs`:
+- `functionArgs`
     - `expression`
     - `expression ',' functionArgs`
 
-- `functionCall`:
+- `functionCall`
     - `identifier '(' ')'`
     - `identifier '(' functionArgs ')'`
-- `expression`:
+- `expression`
     - `term`
     - `functionCall`
     - `'-' expression`
@@ -54,3 +55,5 @@
 - `10.5`
 - `-A3`
 - `SUM(A3:A5, 100, B10 + AVG(C3:E3) / 20)`
+
+**Note**: To enter a formula in the spreadsheet, you have to prefix it with the equals sign: `=`. e.g `=SUM(A1:10)`

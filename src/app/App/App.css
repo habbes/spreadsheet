@@ -30,3 +30,7 @@
     text-decoration: none;
     color: #73705a;
 }
+
+.Header--right a:hover {
+    text-decoration: underline;
+}
