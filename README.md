@@ -22,14 +22,10 @@ To enter a formula in a cell, prefix the formula expression with `=`, e.g. `=SUM
 
 The formula syntax is specified in [grammar.md](grammar.md).
 
+All available built-in functions are listed in [functions.md](functions.md)
+
 Unit tests are located in `tests` folders in the various subfolders under the `src` directory.
 E2E tests are located in `cypress/integration` directory.
-
-### Available functions
-- `AVERAGE` (or `AVG`)
-- `SUM`
-- `PRODUCT`
-- `COUNT`
 
 ## Available Scripts
 
