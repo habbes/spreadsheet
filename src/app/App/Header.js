@@ -8,7 +8,7 @@ const Header = () => (
         <div className="Header--right">
             <div>
                 <a
-                    href="https://github.com/habbes/spreadsheet/blob/masterfunctions.md"
+                    href="https://github.com/habbes/spreadsheet/blob/master/functions.md"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
