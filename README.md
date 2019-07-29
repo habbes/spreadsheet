@@ -2,6 +2,8 @@
 
 A simple browser-based spreadsheet app: https://sheets.habbes.xyz
 
+![Quicksheets screencast](screencast.gif)
+
 ## How it works
 
 When an cell on the spreadsheet is updated, all the non-empty cells
