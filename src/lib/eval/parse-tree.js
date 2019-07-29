@@ -57,7 +57,7 @@ export class CellRangeNode extends ParseTree {
         for (const coord of coords) {
             const cell = evaluateCellAt(coord, context);
             if (!cell) {
-                return;
+                cell.push(undefined);
             }
             if (typeof cell.value !== 'undefined') {
                 cells.push(cell.value);

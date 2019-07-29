@@ -2,10 +2,10 @@ import React from 'react';
 
 const Header = () => (
     <header className="Header">
-        <div class="Header--left">
-            <div class="logo">Quicksheets</div>
+        <div className="Header--left">
+            <div className="logo">Quicksheets</div>
         </div>
-        <div class="Header--right">
+        <div className="Header--right">
             <div>
                 <a
                     href="https://github.com/habbes/spreadsheet/blob/masterfunctions.md"
