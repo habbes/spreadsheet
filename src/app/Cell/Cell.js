@@ -33,11 +33,15 @@ export class Cell extends React.Component {
     return this.state.editing ? cell.input : cell.value;
   }
 
+  getClass () {
+    return `Cell ${this.state.editing ? 'Cell__editing' : ''}`;
+  }
+
   render() {
     const { row, col, updateCell } = this.props;
     const id = indexCoordToAlpha([col, row]);
     return (
-      <div className="Cell" title={id}>
+      <div className={this.getClass()} title={id}>
         <input
           className="Cell--input"
           value={this.getValue()}
