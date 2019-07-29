@@ -6,8 +6,8 @@ A simple browser-based spreadsheet app: https://sheets.habbes.xyz
 
 ## How it works
 
-When an cell on the spreadsheet is updated, all the non-empty cells
-are parsed and evaluated and updated with their new values (or errors). This leaves plenty of room for optimization but should be good enough for a 50x26 grid.
+When a cell on the spreadsheet is updated, all the non-empty cells
+are parsed and evaluated and updated with their new values (or errors). It has plenty of room for optimization but should be good enough for a sparse 50x26 grid.
 
 To enter a formula in a cell, prefix the formula expression with `=`, e.g. `=SUM(A1:A10)`.
 

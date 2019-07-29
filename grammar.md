@@ -41,6 +41,7 @@
     - `term`
     - `functionCall`
     - `'-' expression`
+    - `'(' expression ')'`
     - `expression '+' expression`
     - `expression '-' expression`
     - `expression '*' expression`
