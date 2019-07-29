@@ -17,7 +17,6 @@ To enter a formula in a cell, prefix the formula expression with `=`, e.g. `=SUM
     - `app`: contains all the UI code, based on React and Redux
     - `lib`: contains the modules implementing the core spreadsheet engine
         - `eval`: modules responsible for parsing and evaluating formulae and expressions
-            - `grammar.md`: specification for the formula syntax
         - `functions`: implementations of the functions available in the spreadsheet (e.g. SUM, PRODUCT, etc.)
         - `grid`: abstractions for working with 2-D grids
         - `spreadsheet.js`: implements the `Spreadsheet` class that encapsulate the entire spreadsheet engine
@@ -33,7 +32,7 @@ E2E tests are located in `cypress/integration` directory.
 
 In the project directory, you can run:
 
-#### `yarn start`
+- `yarn start`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -41,27 +40,27 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-#### `yarn test`
+- `yarn test`
 
 Runs unit tests in interactive mode. Tests are re-run when files are changed.
 
-#### `yarn test:e2e`
+- `yarn test:e2e`
 
 Runs end-to-end tests (using Cypress)
 
-#### `yarn test:e2e-watch`
+- `yarn test:e2e-watch`
 
 Allows you to run end-to-end tests interactively and watch them on a GUI.
 
-#### `yarn test:all`
+- `yarn test:all`
 
 Runs all the tests
 
-#### `yarn build`
+- `yarn build`
 
 Builds the app for production to the `build` folder.
 
-#### `yarn deploy`
+- `yarn deploy`
 
 Builds and deploys the app to Firebase hosting.
 
