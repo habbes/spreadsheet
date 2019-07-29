@@ -30,3 +30,13 @@ export function makeFlatteningNumberReducer(fnName, reducer, initial) {
     };
     return makeFlatteningReducer(numberReducer, initial);
 }
+
+export function makeNumberFunction(fnName, fn) {
+    return (...args) => {
+        const invalidArg = args.find(arg => typeof arg !== 'number');
+        if (invalidArg !== undefined) {
+            throw new Error(`Invalid argument for ${fnName}: ${invalidArg}`);
+        }
+        return fn(...args);
+    };
+}
